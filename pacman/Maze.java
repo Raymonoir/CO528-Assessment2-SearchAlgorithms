@@ -23,20 +23,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-class Maze
-{
+class Maze {
     /**
-     * A structure describing a pacman maze, with walls, food locations and pacman location.
-     * Offers maze related functionality.
+     * A structure describing a pacman maze, with walls, food locations and pacman
+     * location. Offers maze related functionality.
      *
      *
      * The first coordinate in walls and food is y, the second is x
      *
-     * walls[y][x] stores whether there is wall at position (x,y)
-     * food[y][x] stores whether there is a dot at position (x,y)
+     * walls[y][x] stores whether there is wall at position (x,y) food[y][x] stores
+     * whether there is a dot at position (x,y)
      *
-     * x increases from left to right
-     * y increases from bottom to top
+     * x increases from left to right y increases from bottom to top
      */
     private final boolean[][] walls;
     private final boolean[][] food;
@@ -56,9 +54,7 @@ class Maze
     private final String LEFT_SYMBOL = "\u23F4";
     private final String RIGHT_SYMBOL = "\u23F5";
 
-
-    public Maze(boolean[][] walls, boolean[][] food, int width, int height, Coordinate pacmanLocation)
-    {
+    public Maze(boolean[][] walls, boolean[][] food, int width, int height, Coordinate pacmanLocation) {
         this.walls = walls;
         this.food = food;
         this.width = width;
@@ -67,8 +63,8 @@ class Maze
     }
 
     /**
-     * Creates a deep copy of maze, which could then be used, e.g., for animation
-     * by using applyAction, which mutates the object.
+     * Creates a deep copy of maze, which could then be used, e.g., for animation by
+     * using applyAction, which mutates the object.
      */
     public Maze copy() {
         int width = this.width;
@@ -77,8 +73,8 @@ class Maze
         boolean[][] food = new boolean[height][width];
         Coordinate pacmanLocation = new Coordinate(this.pacmanLocation.x, this.pacmanLocation.y);
 
-        for (int i=0; i<height; i++) {
-            for (int j=0; j<width; j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 walls[i][j] = this.walls[i][j];
                 food[i][j] = this.food[i][j];
             }
@@ -91,19 +87,19 @@ class Maze
      * The coordinates of corners of the maze
      */
     public Coordinate getBottomLeftCorner() {
-        return new Coordinate(1,1);
+        return new Coordinate(1, 1);
     }
 
     public Coordinate getTopLeftCorner() {
-        return new Coordinate(1,height - 2);
+        return new Coordinate(1, height - 2);
     }
 
     public Coordinate getBottomRightCorner() {
-        return new Coordinate(width - 2,1);
+        return new Coordinate(width - 2, 1);
     }
 
     public Coordinate getTopRightCorner() {
-        return new Coordinate(width - 2,height - 2);
+        return new Coordinate(width - 2, height - 2);
     }
 
     public Coordinate getPacmanLocation() {
@@ -122,8 +118,8 @@ class Maze
     }
 
     /**
-     * String representation of the maze, with the walls,
-     * food locations and pacman location.
+     * String representation of the maze, with the walls, food locations and pacman
+     * location.
      *
      * @return
      */
@@ -187,12 +183,9 @@ class Maze
          * Visualise the solution path of pacman
          */
         Coordinate currentLocation = pacmanLocation;
-        Map<PacmanAction, String> actionToText = Map.of(
-                PacmanAction.NORTH, UP_SYMBOL,
-                PacmanAction.SOUTH, DOWN_SYMBOL,
-                PacmanAction.EAST, RIGHT_SYMBOL,
-                PacmanAction.WEST, LEFT_SYMBOL);
-        for(PacmanAction action: actions) {
+        Map<PacmanAction, String> actionToText = Map.of(PacmanAction.NORTH, UP_SYMBOL, PacmanAction.SOUTH, DOWN_SYMBOL,
+                PacmanAction.EAST, RIGHT_SYMBOL, PacmanAction.WEST, LEFT_SYMBOL);
+        for (PacmanAction action : actions) {
             Coordinate nextLocation = currentLocation.add(action.toVector());
 
             if (isWall(nextLocation))
@@ -215,7 +208,6 @@ class Maze
         }
         return output.toString();
     }
-
 
     public boolean isWall(Coordinate c) {
         return walls[c.y][c.x];
@@ -251,9 +243,8 @@ class Maze
         Coordinate newPacmanLocation = pacmanLocation.add(action.toVector());
 
         if (isWall(newPacmanLocation))
-            throw new RuntimeException("Received illegal action resulting in moving into the wall.\n" +
-                    "Current pacman location " + pacmanLocation+".\n" +
-                    "Supplied action " + action);
+            throw new RuntimeException("Received illegal action resulting in moving into the wall.\n"
+                    + "Current pacman location " + pacmanLocation + ".\n" + "Supplied action " + action);
 
         eatFood(newPacmanLocation);
 
@@ -267,13 +258,13 @@ class Maze
      * @return actions that do not result in moving into wall
      */
     public List<PacmanAction> getPacmanActions(Coordinate pacmanLocation) {
-        PacmanAction[] possibleActions = new PacmanAction[]{PacmanAction.NORTH, PacmanAction.SOUTH,
-                PacmanAction.EAST, PacmanAction.WEST};
+        PacmanAction[] possibleActions = new PacmanAction[] { PacmanAction.NORTH, PacmanAction.SOUTH, PacmanAction.EAST,
+                PacmanAction.WEST };
 
         List<PacmanAction> validActions = new ArrayList<>();
         for (PacmanAction action : possibleActions) {
             Coordinate actionVector = action.toVector();
-            Coordinate nextLocation = pacmanLocation.add( actionVector );
+            Coordinate nextLocation = pacmanLocation.add(actionVector);
 
             if (!this.isWall(nextLocation)) {
                 validActions.add(action);
@@ -311,7 +302,7 @@ class MazeParser {
             if (width == -1) {
                 width = line.length();
             } else if (width != line.length()) {
-                throw new Exception("Invalid maze file. Got lines of different length. Line "+(lineCounter+1));
+                throw new Exception("Invalid maze file. Got lines of different length. Line " + (lineCounter + 1));
             }
 
             boolean[] wallsLine = new boolean[line.length()];
@@ -330,7 +321,7 @@ class MazeParser {
                     wallsLine[i] = true;
                     foodLine[i] = false;
                 } else {
-                    //line.charAt(i) == ' '
+                    // line.charAt(i) == ' '
                     wallsLine[i] = false;
                     foodLine[i] = false;
                 }

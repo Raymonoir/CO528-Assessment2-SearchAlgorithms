@@ -41,7 +41,6 @@ import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.out;
 
-
 public class Pacman {
     static void usage() {
         out.println("usage: Pacman [<option>...]");
@@ -65,68 +64,64 @@ public class Pacman {
         boolean visualise = false;
         boolean animate = false;
 
-        for (int i = 0 ; i < args.length ; ++i) {
+        for (int i = 0; i < args.length; ++i) {
             String s = args[i];
             switch (s) {
-                case "-l":
-                    mazeFile = args[++i];
-                    break;
-                case "-p":
-                    problem = args[++i];
-                    break;
-                case "-f":
-                    function = args[++i];
-                    break;
-                case "-h":
-                    heuristicName = args[++i];
-                    break;
-                case "-s":
-                    visualise = true;
-                    break;
-                case "-a":
-                    animate = true;
-                    break;
-                case "--help":
-                    usage();
-                default:
-                    usage();
+            case "-l":
+                mazeFile = args[++i];
+                break;
+            case "-p":
+                problem = args[++i];
+                break;
+            case "-f":
+                function = args[++i];
+                break;
+            case "-h":
+                heuristicName = args[++i];
+                break;
+            case "-s":
+                visualise = true;
+                break;
+            case "-a":
+                animate = true;
+                break;
+            case "--help":
+                usage();
+            default:
+                usage();
             }
         }
 
         if (animate)
             visualise = false;
 
-
         Maze maze = MazeParser.parseMaze("mazes/" + mazeFile + ".lay");
-        out.println("Maze: "+mazeFile);
+        out.println("Maze: " + mazeFile);
         out.println(maze);
 
-
         /*
-         Instantiate the search problem.
-         For instance, PositionSearchProblem or CornersProblem or FoodSearchProblem
+         * Instantiate the search problem. For instance, PositionSearchProblem or
+         * CornersProblem or FoodSearchProblem
          */
-        SearchProblem<SearchState, PacmanAction> searchProblem =
-                (SearchProblem) Class.forName(problem).getConstructor(Maze.class).newInstance(maze);
+        SearchProblem<SearchState, PacmanAction> searchProblem = (SearchProblem) Class.forName(problem)
+                .getConstructor(Maze.class).newInstance(maze);
 
         /*
-         Instantiate the heuristic. By default it is the trivial heuristic (NullHeuristic), that always returns 0.
+         * Instantiate the heuristic. By default it is the trivial heuristic
+         * (NullHeuristic), that always returns 0.
          */
-        SearchHeuristic<SearchState, PacmanAction> heuristic =
-                (SearchHeuristic) Class.forName(heuristicName).getConstructor().newInstance();
+        SearchHeuristic<SearchState, PacmanAction> heuristic = (SearchHeuristic) Class.forName(heuristicName)
+                .getConstructor().newInstance();
 
         /*
-         Run the search algorithm, where the strategy is determined by function.
-         Can be one of
-            - dfs for depth first search
-            - bfs for breadth first search
-            - greedy for greedy search
-            - astar for A* search
+         * Run the search algorithm, where the strategy is determined by function. Can
+         * be one of - dfs for depth first search - bfs for breadth first search -
+         * greedy for greedy search - astar for A* search
          */
         Solution<SearchState, PacmanAction> solution = GraphSearch.search(function, searchProblem, heuristic);
 
         /*
-         Textual animation of Pacman moves.
+         * Textual animation of Pacman moves.
          */
         if (solution != null) {
             if (animate) {
@@ -139,8 +134,7 @@ public class Pacman {
         }
     }
 
-    private static void animatePacmanActions(Maze maze,
-                                             Solution<? extends SearchState, PacmanAction> solution)
+    private static void animatePacmanActions(Maze maze, Solution<? extends SearchState, PacmanAction> solution)
             throws InterruptedException {
 
         for (PacmanAction action : solution.actions) {
@@ -154,5 +148,3 @@ public class Pacman {
     }
 
 }
-
- 

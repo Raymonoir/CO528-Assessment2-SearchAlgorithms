@@ -21,13 +21,13 @@
 import java.util.*;
 
 /**
- * Abstraction of a generic search problem (does not have to be a search problem for Pacman).
- * Implemented for you.
+ * Abstraction of a generic search problem (does not have to be a search problem
+ * for Pacman). Implemented for you.
  *
  * @param <S> class for states
  * @param <A> class for actions
  */
-public abstract class SearchProblem<S,A> {
+public abstract class SearchProblem<S, A> {
     long expandedCount;
     List<S> visitedList;
     Set<S> visitedSet;
@@ -56,11 +56,14 @@ public abstract class SearchProblem<S,A> {
     }
 
     /**
-     * Not used in the current version. Will be useful when
-     * there will be a GUI version.
+     * Not used in the current version. Will be useful when there will be a GUI
+     * version.
+     * 
      * @return
      */
-    public List<S> getVisitedList() { return visitedList; }
+    public List<S> getVisitedList() {
+        return visitedList;
+    }
 
     /**
      * @return the start state
@@ -74,8 +77,9 @@ public abstract class SearchProblem<S,A> {
     public abstract boolean isGoalState(S state);
 
     /**
-     * Expands a state and returns for each valid action a triple of:
-     * (next state, action, cost)
+     * Expands a state and returns for each valid action a triple of: (next state,
+     * action, cost)
+     * 
      * @param state
      * @return
      */
@@ -104,10 +108,9 @@ public abstract class SearchProblem<S,A> {
 }
 
 /**
- * Formalisation of the position search problem for Pacman.
- * Implemented for you.
- * You do not need to modify this class.
- * You can study it to understand how to implement other search problems.
+ * Formalisation of the position search problem for Pacman. Implemented for you.
+ * You do not need to modify this class. You can study it to understand how to
+ * implement other search problems.
  */
 class PacmanPositionSearchProblem extends SearchProblem<PacmanPositionSearchState, PacmanAction> {
 
@@ -115,11 +118,10 @@ class PacmanPositionSearchProblem extends SearchProblem<PacmanPositionSearchStat
     private final Coordinate goalLocation;
     private final Coordinate startLocation;
 
-
     public PacmanPositionSearchProblem(Maze maze) {
         this.maze = maze;
 
-        goalLocation = new Coordinate(1,1);
+        goalLocation = new Coordinate(1, 1);
         startLocation = maze.getPacmanLocation();
     }
 
@@ -153,16 +155,16 @@ class PacmanPositionSearchProblem extends SearchProblem<PacmanPositionSearchStat
 
     @Override
     public PacmanPositionSearchState getSuccessor(PacmanPositionSearchState state, PacmanAction action) {
-        if (! getActions(state).contains(action)) {
-            throw new RuntimeException("Invalid arguments. Action" + action + "is not valid from state" + state);
+        if (!getActions(state).contains(action)) {
+            throw new RuntimeException("Invalid arguments. Action" + action + " is not valid from state " + state);
         }
 
-        return new PacmanPositionSearchState(state.pacmanLocation.add( action.toVector() ));
+        return new PacmanPositionSearchState(state.pacmanLocation.add(action.toVector()));
     }
 
     @Override
     public double getCost(PacmanPositionSearchState state, PacmanAction action) {
-        if (! getActions(state).contains(action)) {
+        if (!getActions(state).contains(action)) {
             // action leads into the wall
             return 999999;
         }
@@ -175,8 +177,8 @@ class PacmanPositionSearchProblem extends SearchProblem<PacmanPositionSearchStat
 }
 
 /**
- * Formalisation of Corners problem for Pacman.
- * You need to fill in the missing parts.
+ * Formalisation of Corners problem for Pacman. You need to fill in the missing
+ * parts.
  */
 class PacmanCornersProblem extends SearchProblem<PacmanCornersSearchState, PacmanAction> {
 
@@ -189,59 +191,54 @@ class PacmanCornersProblem extends SearchProblem<PacmanCornersSearchState, Pacma
         this.maze = maze;
         this.startLocation = maze.getPacmanLocation();
 
-        this.cornersLocations = Arrays.asList(
-                maze.getBottomLeftCorner(),
-                maze.getTopLeftCorner(),
-                maze.getTopRightCorner(),
-                maze.getBottomRightCorner()
-        );
+        this.cornersLocations = Arrays.asList(maze.getBottomLeftCorner(), maze.getTopLeftCorner(),
+                maze.getTopRightCorner(), maze.getBottomRightCorner());
 
-        //TODO: IF YOU NEED, YOU CAN ADD YOUR CODE HERE
+        // TODO: IF YOU NEED, YOU CAN ADD YOUR CODE HERE
     }
 
     @Override
     public PacmanCornersSearchState getStartState() {
-        //TODO: YOUR CODE HERE
+        // TODO: YOUR CODE HERE
         throw new RuntimeException("Not Implemented");
     }
 
     @Override
     public boolean isGoalState(PacmanCornersSearchState state) {
-        //TODO: YOUR CODE HERE
+        // TODO: YOUR CODE HERE
         throw new RuntimeException("Not Implemented");
     }
 
     @Override
     public Collection<SuccessorInfo<PacmanCornersSearchState, PacmanAction>> expand(PacmanCornersSearchState state) {
-        //TODO: YOUR CODE HERE
+        // TODO: YOUR CODE HERE
         throw new RuntimeException("Not Implemented");
     }
 
     @Override
     public List<PacmanAction> getActions(PacmanCornersSearchState state) {
-        //TODO: YOUR CODE HERE
+        // TODO: YOUR CODE HERE
         throw new RuntimeException("Not Implemented");
     }
 
     @Override
     public PacmanCornersSearchState getSuccessor(PacmanCornersSearchState state, PacmanAction action) {
-        //TODO: YOUR CODE HERE
+        // TODO: YOUR CODE HERE
         throw new RuntimeException("Not Implemented");
     }
 
     @Override
     public double getCost(PacmanCornersSearchState state, PacmanAction action) {
-        //TODO: YOUR CODE HERE
+        // TODO: YOUR CODE HERE
         throw new RuntimeException("Not Implemented");
     }
 
-    //TODO: YOU CAN ADD YOUR METHODS HERE
+    // TODO: YOU CAN ADD YOUR METHODS HERE
 }
 
 /**
- * Formalisation of the problem of Eating All Food for Pacman.
- * Implemented for you.
- * You should not need to modify this class.
+ * Formalisation of the problem of Eating All Food for Pacman. Implemented for
+ * you. You should not need to modify this class.
  */
 class PacmanFoodSearchProblem extends SearchProblem<PacmanFoodSearchState, PacmanAction> {
 
@@ -268,7 +265,7 @@ class PacmanFoodSearchProblem extends SearchProblem<PacmanFoodSearchState, Pacma
     }
 
     /**
-     Computes the updated food coordinates given a new position.
+     * Computes the updated food coordinates given a new position.
      */
     private List<Coordinate> getNextFoodCoordinates(Coordinate position, List<Coordinate> foodCoordinates) {
         List<Coordinate> nextFoodCoordinates = foodCoordinates;
@@ -298,18 +295,18 @@ class PacmanFoodSearchProblem extends SearchProblem<PacmanFoodSearchState, Pacma
 
     @Override
     public PacmanFoodSearchState getSuccessor(PacmanFoodSearchState state, PacmanAction action) {
-        if (! getActions(state).contains(action)) {
-            throw new RuntimeException("Invalid arguments. Action" + action + "is not valid from state" + state);
+        if (!getActions(state).contains(action)) {
+            throw new RuntimeException("Invalid arguments. Action" + action + " is not valid from state " + state);
         }
 
         Coordinate nextLocation = state.pacmanLocation.add(action.toVector());
         return new PacmanFoodSearchState(nextLocation,
-                                         this.getNextFoodCoordinates(nextLocation, state.foodCoordinates));
+                this.getNextFoodCoordinates(nextLocation, state.foodCoordinates));
     }
 
     @Override
     public double getCost(PacmanFoodSearchState state, PacmanAction action) {
-        if (! getActions(state).contains(action)) {
+        if (!getActions(state).contains(action)) {
             // action leads into the wall
             return 999999;
         }
@@ -318,16 +315,15 @@ class PacmanFoodSearchProblem extends SearchProblem<PacmanFoodSearchState, Pacma
 }
 
 /**************************************************************
- ************            Search states            *************
+ ************ Search states *************
  **************************************************************/
 
 interface SearchState {
 }
 
 /**
- * Formalisation of search state for PacmanPositionSearchProblem.
- * Implemented for you.
- * You should not need to modify this class.
+ * Formalisation of search state for PacmanPositionSearchProblem. Implemented
+ * for you. You should not need to modify this class.
  */
 class PacmanPositionSearchState implements SearchState {
     Coordinate pacmanLocation;
@@ -356,14 +352,14 @@ class PacmanPositionSearchState implements SearchState {
 }
 
 /**
- * Formalisation of search state for PacmanCornersProblem.
- * You need to implement this class.
+ * Formalisation of search state for PacmanCornersProblem. You need to implement
+ * this class.
  */
 class PacmanCornersSearchState implements SearchState {
-    //TODO: ADD YOUR ATTRIBUTES HERE
+    // TODO: ADD YOUR ATTRIBUTES HERE
 
     public PacmanCornersSearchState(/* TODO: ADD YOUR PARAMETERS */) {
-        //TODO: YOUR CODE HERE
+        // TODO: YOUR CODE HERE
         throw new RuntimeException("Not Implemented");
     }
 
@@ -372,35 +368,32 @@ class PacmanCornersSearchState implements SearchState {
      */
     @Override
     public String toString() {
-        //TODO: YOUR CODE HERE
+        // TODO: YOUR CODE HERE
         throw new RuntimeException("Not Implemented");
     }
 
     /**
-     * You need to implement this method properly for correct functioning
-     * of sets.
+     * You need to implement this method properly for correct functioning of sets.
      */
     @Override
     public boolean equals(Object o) {
-        //TODO: YOUR CODE HERE
+        // TODO: YOUR CODE HERE
         throw new RuntimeException("Not Implemented");
     }
 
     /**
-     * You need to implement this method properly for correct functioning
-     * of sets.
+     * You need to implement this method properly for correct functioning of sets.
      */
     @Override
     public int hashCode() {
-        //TODO: YOUR CODE HERE
+        // TODO: YOUR CODE HERE
         throw new RuntimeException("Not Implemented");
     }
 }
 
 /**
- * Formalisation of search state for PacmanFoodSearchProblem.
- * Implemented for you.
- * You should not need to modify this class.
+ * Formalisation of search state for PacmanFoodSearchProblem. Implemented for
+ * you. You should not need to modify this class.
  */
 class PacmanFoodSearchState implements SearchState {
     Coordinate pacmanLocation;
@@ -421,8 +414,8 @@ class PacmanFoodSearchState implements SearchState {
         if (!(o instanceof PacmanFoodSearchState))
             return false;
 
-        return pacmanLocation.equals(((PacmanFoodSearchState) o).pacmanLocation) &&
-                foodCoordinates.equals(((PacmanFoodSearchState) o).foodCoordinates);
+        return pacmanLocation.equals(((PacmanFoodSearchState) o).pacmanLocation)
+                && foodCoordinates.equals(((PacmanFoodSearchState) o).foodCoordinates);
     }
 
     @Override
@@ -432,168 +425,200 @@ class PacmanFoodSearchState implements SearchState {
 }
 
 /**************************************************************
- ************           Search actions            *************
+ ************ Search actions *************
  **************************************************************/
 
 interface Action {
 }
 
 /**
- * Enumeration of possible Pacman actions.
- * Implemented for you.
- * You should not need to modify this class.
+ * Enumeration of possible Pacman actions. Implemented for you. You should not
+ * need to modify this class.
  */
 enum PacmanAction implements Action {
     NORTH {
         public PacmanAction reverse() {
             return PacmanAction.SOUTH;
         }
+
         public Coordinate toVector() {
-            return new Coordinate(0,1);
+            return new Coordinate(0, 1);
         }
-        public String toString() { return "North"; }
+
+        public String toString() {
+            return "North";
+        }
     },
     EAST {
         public PacmanAction reverse() {
             return PacmanAction.WEST;
         }
+
         public Coordinate toVector() {
-            return new Coordinate(1,0);
+            return new Coordinate(1, 0);
         }
-        public String toString() { return "East"; }
+
+        public String toString() {
+            return "East";
+        }
     },
     SOUTH {
         public PacmanAction reverse() {
             return PacmanAction.NORTH;
         }
+
         public Coordinate toVector() {
-            return new Coordinate(0,-1);
+            return new Coordinate(0, -1);
         }
-        public String toString() { return "South"; }
+
+        public String toString() {
+            return "South";
+        }
     },
     WEST {
         public PacmanAction reverse() {
             return PacmanAction.EAST;
         }
+
         public Coordinate toVector() {
-            return new Coordinate(-1,0);
+            return new Coordinate(-1, 0);
         }
-        public String toString() { return "West"; }
+
+        public String toString() {
+            return "West";
+        }
     },
     STOP {
         public PacmanAction reverse() {
             return PacmanAction.STOP;
         }
+
         public Coordinate toVector() {
-            return new Coordinate(0,0);
+            return new Coordinate(0, 0);
         }
-        public String toString() { return "Stop"; }
+
+        public String toString() {
+            return "Stop";
+        }
     };
 
     public abstract PacmanAction reverse();
+
     public abstract Coordinate toVector();
 }
 
 /**************************************************************
- ************          Search heuristics          *************
+ ************ Search heuristics *************
  **************************************************************/
 
 /**
  * Interface for search heuristics.
+ * 
  * @param <S>
  * @param <A>
  */
-interface SearchHeuristic<S,A> {
-    Double value(S state, SearchProblem<S,A> problem);
+interface SearchHeuristic<S, A> {
+    Double value(S state, SearchProblem<S, A> problem);
 }
 
 /**
- * Null heuristic, i.e., the one that always returns 0.
- * A* with null heuristic is equivalent to uniform-cost search.
- * Implemented for you.
- * You should not need to modify this class.
+ * Null heuristic, i.e., the one that always returns 0. A* with null heuristic
+ * is equivalent to uniform-cost search. Implemented for you. You should not
+ * need to modify this class.
  *
  * @param <S>
  * @param <A>
  */
-class NullHeuristic<S,A> implements SearchHeuristic<S,A> {
-    public NullHeuristic() {}
+class NullHeuristic<S, A> implements SearchHeuristic<S, A> {
+    public NullHeuristic() {
+    }
 
     @Override
     public Double value(S state, SearchProblem<S, A> problem) {
         return 0.0;
     }
 
-    public String toString() { return this.getClass().getName(); }
+    public String toString() {
+        return this.getClass().getName();
+    }
 }
 
 /**
- * Manhattan Distance heuristic.
- * Currently works only for PacmanPositionSearchProblem.
+ * Manhattan Distance heuristic. Currently works only for
+ * PacmanPositionSearchProblem.
  *
  * @param <S>
  * @param <A>
  */
-class ManhattanDistanceHeuristic<S,A> implements SearchHeuristic<S,A> {
-    public ManhattanDistanceHeuristic() {}
+class ManhattanDistanceHeuristic<S, A> implements SearchHeuristic<S, A> {
+    public ManhattanDistanceHeuristic() {
+    }
 
     @Override
     public Double value(S state, SearchProblem<S, A> problem) {
 
         if (problem instanceof PacmanPositionSearchProblem && state instanceof PacmanPositionSearchState) {
-            return ((PacmanPositionSearchState) state).pacmanLocation.manhattanDistance(((PacmanPositionSearchProblem) problem).getGoalLocation());
+            return ((PacmanPositionSearchState) state).pacmanLocation
+                    .manhattanDistance(((PacmanPositionSearchProblem) problem).getGoalLocation());
         }
         return 0.0;
     }
 
-    public String toString() { return this.getClass().getName(); }
+    public String toString() {
+        return this.getClass().getName();
+    }
 }
 
 /**
- * Heuristic for PacmanCornersProblem.
- * You need to implement it.
+ * Heuristic for PacmanCornersProblem. You need to implement it.
+ * 
  * @param <S>
  * @param <A>
  */
-class CornersHeuristic<S,A> implements SearchHeuristic<S,A> {
-    public CornersHeuristic() {}
+class CornersHeuristic<S, A> implements SearchHeuristic<S, A> {
+    public CornersHeuristic() {
+    }
 
     @Override
     public Double value(S state, SearchProblem<S, A> problem) {
 
         if (problem instanceof PacmanCornersProblem && state instanceof PacmanCornersSearchState) {
 
-            //TODO: YOUR CODE HERE
+            // TODO: YOUR CODE HERE
             throw new RuntimeException("Not Implemented");
         }
 
         return 0.0;
     }
 
-    public String toString() { return this.getClass().getName(); }
+    public String toString() {
+        return this.getClass().getName();
+    }
 }
 
 /**
- * Heuristic for PacmanFoodSearchProblem.
- * You need to implement it.
+ * Heuristic for PacmanFoodSearchProblem. You need to implement it.
+ * 
  * @param <S>
  * @param <A>
  */
-class FoodHeuristic<S,A> implements SearchHeuristic<S,A> {
-    public FoodHeuristic() {}
+class FoodHeuristic<S, A> implements SearchHeuristic<S, A> {
+    public FoodHeuristic() {
+    }
 
     @Override
     public Double value(S state, SearchProblem<S, A> problem) {
 
         if (problem instanceof PacmanFoodSearchProblem && state instanceof PacmanFoodSearchState) {
 
-            //TODO: YOUR CODE HERE
+            // TODO: YOUR CODE HERE
             throw new RuntimeException("Not Implemented");
         }
 
         return 0.0;
     }
 
-    public String toString() { return this.getClass().getName(); }
+    public String toString() {
+        return this.getClass().getName();
+    }
 }
-
