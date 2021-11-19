@@ -1,1 +1,1 @@
-# CO5280-Assessment2-SearchAlgorithms
+# CO528-Assessment2-SearchAlgorithms
