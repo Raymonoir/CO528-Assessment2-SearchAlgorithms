@@ -194,43 +194,57 @@ class PacmanCornersProblem extends SearchProblem<PacmanCornersSearchState, Pacma
         this.cornersLocations = Arrays.asList(maze.getBottomLeftCorner(), maze.getTopLeftCorner(),
                 maze.getTopRightCorner(), maze.getBottomRightCorner());
 
-        // TODO: IF YOU NEED, YOU CAN ADD YOUR CODE HERE
     }
 
     @Override
     public PacmanCornersSearchState getStartState() {
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        return new PacmanCornersSearchState(startLocation, cornersLocations);
     }
 
     @Override
     public boolean isGoalState(PacmanCornersSearchState state) {
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        return state.cornerCoordinates.isEmpty();
     }
 
     @Override
     public Collection<SuccessorInfo<PacmanCornersSearchState, PacmanAction>> expand(PacmanCornersSearchState state) {
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        Collection<SuccessorInfo<PacmanCornersSearchState, PacmanAction>> successors = new ArrayList<>();
+        for (PacmanAction action : getActions(state)) {
+            successors.add(new SuccessorInfo<>(getSuccessor(state, action), action, getCost(state, action)));
+        }
+
+        doBookKeeping(state); // do not remove
+
+        return successors;
     }
 
     @Override
     public List<PacmanAction> getActions(PacmanCornersSearchState state) {
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        return maze.getPacmanActions(state.pacmanLocation);
     }
 
     @Override
     public PacmanCornersSearchState getSuccessor(PacmanCornersSearchState state, PacmanAction action) {
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        if (!getActions(state).contains(action)) {
+            throw new RuntimeException("Invalid arguments. Action" + action + " is not valid from state " + state);
+        }
+
+        Coordinate nextLocation = state.pacmanLocation.add(action.toVector());
+        List<Coordinate> nextLocationCorners = new ArrayList<Coordinate>(state.cornerCoordinates);
+
+        if (state.cornerCoordinates.contains(nextLocation)) {
+            nextLocationCorners.remove(nextLocation);
+        }
+        return new PacmanCornersSearchState(nextLocation, nextLocationCorners);
     }
 
     @Override
     public double getCost(PacmanCornersSearchState state, PacmanAction action) {
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        if (!getActions(state).contains(action)) {
+            // action leads into the wall
+            return 999999;
+        }
+        return 1;
     }
 
     // TODO: YOU CAN ADD YOUR METHODS HERE
@@ -356,11 +370,12 @@ class PacmanPositionSearchState implements SearchState {
  * this class.
  */
 class PacmanCornersSearchState implements SearchState {
-    // TODO: ADD YOUR ATTRIBUTES HERE
+    Coordinate pacmanLocation;
+    List<Coordinate> cornerCoordinates;
 
-    public PacmanCornersSearchState(/* TODO: ADD YOUR PARAMETERS */) {
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+    public PacmanCornersSearchState(Coordinate pacmanLocation, List<Coordinate> cornerCoordinates) {
+        this.pacmanLocation = pacmanLocation;
+        this.cornerCoordinates = cornerCoordinates;
     }
 
     /**
@@ -368,8 +383,12 @@ class PacmanCornersSearchState implements SearchState {
      */
     @Override
     public String toString() {
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        String cords = "";
+
+        for (Coordinate c : cornerCoordinates) {
+            cords += c.toString() + ", ";
+        }
+        return pacmanLocation.toString() + " : " + cords;
     }
 
     /**
@@ -377,8 +396,11 @@ class PacmanCornersSearchState implements SearchState {
      */
     @Override
     public boolean equals(Object o) {
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        if (!(o instanceof PacmanCornersSearchState))
+            return false;
+
+        return pacmanLocation.equals(((PacmanCornersSearchState) o).pacmanLocation)
+                && cornerCoordinates.equals(((PacmanCornersSearchState) o).cornerCoordinates);
     }
 
     /**
@@ -386,8 +408,7 @@ class PacmanCornersSearchState implements SearchState {
      */
     @Override
     public int hashCode() {
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        return 7 * pacmanLocation.hashCode() + cornerCoordinates.hashCode();
     }
 }
 
@@ -584,8 +605,26 @@ class CornersHeuristic<S, A> implements SearchHeuristic<S, A> {
 
         if (problem instanceof PacmanCornersProblem && state instanceof PacmanCornersSearchState) {
 
-            // TODO: YOUR CODE HERE
-            throw new RuntimeException("Not Implemented");
+            // Use the maximum of all the distances between pacman and the goals
+            double max = 0;
+            Coordinate currentLocation = ((PacmanCornersSearchState) state).pacmanLocation;
+            List<Coordinate> goalLocations = ((PacmanCornersSearchState) state).cornerCoordinates;
+
+            // return 0 if at goal
+            if (goalLocations.contains(currentLocation)) {
+                return max;
+            } else {
+                for (Coordinate c : goalLocations) {
+                    double distance = currentLocation.manhattanDistance(c);
+                    if (distance > max) {
+                        max = distance;
+                    }
+                }
+
+                return max;
+
+            }
+
         }
 
         return 0.0;
@@ -611,8 +650,25 @@ class FoodHeuristic<S, A> implements SearchHeuristic<S, A> {
 
         if (problem instanceof PacmanFoodSearchProblem && state instanceof PacmanFoodSearchState) {
 
-            // TODO: YOUR CODE HERE
-            throw new RuntimeException("Not Implemented");
+            // Same heuristic as above but for food locations
+            double max = 0;
+            Coordinate currentLocation = ((PacmanFoodSearchState) state).pacmanLocation;
+            List<Coordinate> goalLocations = ((PacmanFoodSearchState) state).foodCoordinates;
+
+            // Return 0 if at goal
+            if (goalLocations.contains(currentLocation)) {
+                return max;
+            } else {
+                for (Coordinate c : goalLocations) {
+                    double distance = currentLocation.manhattanDistance(c);
+                    if (distance > max) {
+                        max = distance;
+                    }
+                }
+
+                return max;
+
+            }
         }
 
         return 0.0;

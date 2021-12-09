@@ -67,28 +67,28 @@ public class Pacman {
         for (int i = 0; i < args.length; ++i) {
             String s = args[i];
             switch (s) {
-            case "-l":
-                mazeFile = args[++i];
-                break;
-            case "-p":
-                problem = args[++i];
-                break;
-            case "-f":
-                function = args[++i];
-                break;
-            case "-h":
-                heuristicName = args[++i];
-                break;
-            case "-s":
-                visualise = true;
-                break;
-            case "-a":
-                animate = true;
-                break;
-            case "--help":
-                usage();
-            default:
-                usage();
+                case "-l":
+                    mazeFile = args[++i];
+                    break;
+                case "-p":
+                    problem = args[++i];
+                    break;
+                case "-f":
+                    function = args[++i];
+                    break;
+                case "-h":
+                    heuristicName = args[++i];
+                    break;
+                case "-s":
+                    visualise = true;
+                    break;
+                case "-a":
+                    animate = true;
+                    break;
+                case "--help":
+                    usage();
+                default:
+                    usage();
             }
         }
 
@@ -129,6 +129,10 @@ public class Pacman {
             }
             if (visualise) {
                 out.println("Solution:");
+
+                // for (int i = 0; i < solution.actions.size(); i++) {
+                // System.out.println(solution.actions.get(i));
+                // }
                 out.println(maze.toString(solution.actions));
             }
         }

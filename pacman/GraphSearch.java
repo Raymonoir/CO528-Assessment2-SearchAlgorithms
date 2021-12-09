@@ -42,25 +42,25 @@ public class GraphSearch<S, A> {
         Solution<S, A> solution;
         long start = System.currentTimeMillis();
         switch (function) {
-        case "dfs":
-            solution = depthFirstSearch(problem);
-            break;
-        case "bfs":
-            solution = breadthFirstSearch(problem);
-            break;
-        case "greedy":
-            solution = greedySearch(problem, heuristic);
-            break;
-        case "astar":
-            solution = aStarSearch(problem, heuristic);
-            break;
-        case "gowest":
-            if (problem instanceof PacmanPositionSearchProblem) {
-                solution = (Solution<S, A>) goWestSearch((PacmanPositionSearchProblem) problem);
+            case "dfs":
+                solution = depthFirstSearch(problem);
                 break;
-            }
-        default:
-            throw new RuntimeException("Unknown search strategy: " + function);
+            case "bfs":
+                solution = breadthFirstSearch(problem);
+                break;
+            case "greedy":
+                solution = greedySearch(problem, heuristic);
+                break;
+            case "astar":
+                solution = aStarSearch(problem, heuristic);
+                break;
+            case "gowest":
+                if (problem instanceof PacmanPositionSearchProblem) {
+                    solution = (Solution<S, A>) goWestSearch((PacmanPositionSearchProblem) problem);
+                    break;
+                }
+            default:
+                throw new RuntimeException("Unknown search strategy: " + function);
         }
 
         long end = System.currentTimeMillis();
@@ -87,15 +87,71 @@ public class GraphSearch<S, A> {
     private static <S, A> Solution<S, A> breadthFirstSearch(SearchProblem<S, A> problem) {
         out.println("Search using BFS algorithm");
 
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        Util.Queue<Node<S, A>> frontier = new Util.Queue<Node<S, A>>();
+        Set<S> expanded = new HashSet<S>();
+
+        List<A> empty = new ArrayList<A>();
+        Node<S, A> startNode = new Node<S, A>(problem.getStartState(), empty, 0);
+
+        frontier.push(startNode);
+
+        while (!frontier.isEmpty()) {
+            Node<S, A> nextNode = frontier.pop();
+            if (problem.isGoalState(nextNode.nodeState)) {
+                return new Solution<>(nextNode.nodeState, nextNode.nodeActions, nextNode.cost);
+            } else if (!expanded.contains(nextNode.nodeState)) {
+                problem.expand(nextNode.nodeState);
+                expanded.add(nextNode.nodeState);
+
+                for (A possAction : problem.getActions(nextNode.nodeState)) {
+                    S s = problem.getSuccessor(nextNode.nodeState, possAction);
+                    double cost = problem.getCost(nextNode.nodeState, possAction);
+                    List<A> newNodeActions = new ArrayList<A>(nextNode.nodeActions);
+                    newNodeActions.add(possAction);
+
+                    Node<S, A> node = new Node<S, A>(s, newNodeActions, cost + nextNode.cost);
+                    frontier.push(node);
+                }
+
+            }
+        }
+
+        return null;
     }
 
     private static <S, A> Solution<S, A> depthFirstSearch(SearchProblem<S, A> problem) {
         out.println("Search using DFS algorithm");
 
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        Util.Stack<Node<S, A>> frontier = new Util.Stack<Node<S, A>>();
+        Set<S> expanded = new HashSet<S>();
+
+        List<A> empty = new ArrayList<A>();
+        Node<S, A> startNode = new Node<S, A>(problem.getStartState(), empty, 0);
+
+        frontier.push(startNode);
+
+        while (!frontier.isEmpty()) {
+            Node<S, A> nextNode = frontier.pop();
+            if (problem.isGoalState(nextNode.nodeState)) {
+                return new Solution<>(nextNode.nodeState, nextNode.nodeActions, nextNode.cost);
+            } else if (!expanded.contains(nextNode.nodeState)) {
+                problem.expand(nextNode.nodeState);
+                expanded.add(nextNode.nodeState);
+
+                for (A possAction : problem.getActions(nextNode.nodeState)) {
+                    S s = problem.getSuccessor(nextNode.nodeState, possAction);
+                    double cost = problem.getCost(nextNode.nodeState, possAction);
+                    List<A> newNodeActions = new ArrayList<A>(nextNode.nodeActions);
+                    newNodeActions.add(possAction);
+
+                    Node<S, A> node = new Node<S, A>(s, newNodeActions, cost + nextNode.cost);
+                    frontier.push(node);
+                }
+
+            }
+        }
+
+        return null;
     }
 
     private static <S, A> Solution<S, A> greedySearch(SearchProblem<S, A> problem, SearchHeuristic<S, A> heuristic) {
@@ -108,8 +164,53 @@ public class GraphSearch<S, A> {
     private static <S, A> Solution<S, A> aStarSearch(SearchProblem<S, A> problem, SearchHeuristic<S, A> heuristic) {
         out.println("Search using A* algorithm and heuristic " + heuristic);
 
-        // TODO: YOUR CODE HERE
-        throw new RuntimeException("Not Implemented");
+        Util.Frontier<Node<S, A>> frontier = new Util.PriorityQueue<Node<S, A>>(
+                new Comparator<Node<S, A>>() {
+
+                    @Override
+                    public int compare(Node<S, A> n1, Node<S, A> n2) {
+                        double n1Cost = n1.cost + heuristic.value(n1.nodeState, problem);
+                        double n2Cost = n2.cost + heuristic.value(n2.nodeState, problem);
+
+                        if (n1Cost == n2Cost) {
+                            return 0;
+                        } else if (n1Cost > n2Cost) {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+
+                    }
+                });
+        Set<S> expanded = new HashSet<S>();
+
+        List<A> empty = new ArrayList<A>();
+        Node<S, A> startNode = new Node<S, A>(problem.getStartState(), empty, 0);
+
+        frontier.push(startNode);
+
+        while (!frontier.isEmpty()) {
+            Node<S, A> nextNode = frontier.pop();
+            if (problem.isGoalState(nextNode.nodeState)) {
+                return new Solution<>(nextNode.nodeState, nextNode.nodeActions, nextNode.cost);
+            } else if (!expanded.contains(nextNode.nodeState)) {
+                problem.expand(nextNode.nodeState);
+                expanded.add(nextNode.nodeState);
+
+                for (A possAction : problem.getActions(nextNode.nodeState)) {
+                    S s = problem.getSuccessor(nextNode.nodeState, possAction);
+                    double cost = problem.getCost(nextNode.nodeState, possAction);
+                    List<A> newNodeActions = new ArrayList<A>(nextNode.nodeActions);
+                    newNodeActions.add(possAction);
+
+                    Node<S, A> node = new Node<S, A>(s, newNodeActions, cost + nextNode.cost);
+                    frontier.push(node);
+                }
+
+            }
+        }
+
+        return null;
     }
 
     private static <S, A> Solution<S, A> graphSearch(SearchProblem<S, A> problem, Util.Frontier<Node<S, A>> frontier,
@@ -140,7 +241,15 @@ public class GraphSearch<S, A> {
  */
 class Node<S, A> implements Comparable<Node<S, A>> {
 
-    // TODO: YOUR ATTRIBUTES AND CONSTRUCTOR HERE
+    S nodeState;
+    List<A> nodeActions;
+    double cost;
+
+    public Node(S state, List<A> actions, double cost) {
+        nodeState = state;
+        nodeActions = actions;
+        this.cost = cost;
+    }
 
     @Override
     public int compareTo(Node<S, A> otherNode) {
